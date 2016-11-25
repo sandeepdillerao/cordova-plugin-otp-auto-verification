@@ -1,5 +1,7 @@
 var exec = require('cordova/exec');
 
-exports.coolMethod = function(arg0, success, error) {
-    exec(success, error, "OTPAutoVerification", "coolMethod", [arg0]);
+module.exports = {
+    coolMethod: function (name, successCallback, errorCallback) {
+        cordova.exec(successCallback, errorCallback, "OTPAutoVerification", "coolMethod", [name]);
+    }
 };
