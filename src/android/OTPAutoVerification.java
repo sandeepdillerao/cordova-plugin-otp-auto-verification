@@ -1,3 +1,5 @@
+package org.apache.cordova.OTPAutoVerification;
+
 import org.apache.cordova.CordovaPlugin;
 import org.apache.cordova.CallbackContext;
 
