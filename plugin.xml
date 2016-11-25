@@ -13,6 +13,6 @@
         </config-file>
         <config-file parent="/*" target="AndroidManifest.xml"></config-file>
         <source-file src="src/android/OTPAutoVerification.java"
-                     target-dir="src/cordova-plugin-otp-auto-verification/OTPAutoVerification"/>
+                     target-dir="src/org/apache/cordova/OTPAutoVerification"/>
     </platform>
 </plugin>
