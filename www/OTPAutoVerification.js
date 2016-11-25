@@ -1,7 +1,11 @@
 var exec = require('cordova/exec');
 
 module.exports = {
-    coolMethod: function (name, successCallback, errorCallback) {
-        cordova.exec(successCallback, errorCallback, "OTPAutoVerification", "coolMethod", [name]);
+    startOTPListener: function (options, successCallback, errorCallback) {
+        cordova.exec(successCallback, errorCallback, "OTPAutoVerification", "startOTPListener", [options]);
+    },
+    stopOTPListener: function () {
+        cordova.exec("OTPAutoVerification", "startOTPListener");
     }
+
 };

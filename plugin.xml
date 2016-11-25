@@ -3,7 +3,7 @@
         xmlns:android="http://schemas.android.com/apk/res/android">
     <name>OTPAutoVerification</name>
     <js-module name="OTPAutoVerification" src="www/OTPAutoVerification.js">
-        <clobbers target="cordova.plugins.OTPAutoVerification"/>
+        <clobbers target="OTPAutoVerification"/>
     </js-module>
     <platform name="android">
         <config-file parent="/*" target="res/xml/config.xml">
