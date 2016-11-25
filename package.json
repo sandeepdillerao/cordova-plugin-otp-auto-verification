@@ -1,0 +1,25 @@
+{
+  "name": "OTPAutoVerification",
+  "version": "0.0.1",
+  "description": "A plugin for Autoverification of OTP",
+  "cordova": {
+    "id": "cordova-plugin-otp-auto-verification",
+    "platforms": [
+      "android"
+    ]
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sandeepdillerao/cordova-plugin-otp-auto-verification.git"
+  },
+  "keywords": [
+    "ecosystem:cordova",
+    "cordova-android"
+  ],
+  "author": "sandeep dillerao",
+  "license": "MIT License ",
+  "bugs": {
+    "url": "https://github.com/sandeepdillerao/cordova-plugin-otp-auto-verification/issues"
+  },
+  "homepage": "https://github.com/sandeepdillerao/cordova-plugin-otp-auto-verification#readme"
+}

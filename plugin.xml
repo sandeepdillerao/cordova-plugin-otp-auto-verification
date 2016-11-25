@@ -1,0 +1,18 @@
+<?xml version='1.0' encoding='utf-8'?>
+<plugin id="cordova-plugin-otp-auto-verification" version="0.0.1" xmlns="http://apache.org/cordova/ns/plugins/1.0"
+        xmlns:android="http://schemas.android.com/apk/res/android">
+    <name>OTPAutoVerification</name>
+    <js-module name="OTPAutoVerification" src="www/OTPAutoVerification.js">
+        <clobbers target="cordova.plugins.OTPAutoVerification"/>
+    </js-module>
+    <platform name="android">
+        <config-file parent="/*" target="res/xml/config.xml">
+            <feature name="OTPAutoVerification">
+                <param name="android-package" value="cordova-plugin-otp-auto-verification.OTPAutoVerification"/>
+            </feature>
+        </config-file>
+        <config-file parent="/*" target="AndroidManifest.xml"></config-file>
+        <source-file src="src/android/OTPAutoVerification.java"
+                     target-dir="src/cordova-plugin-otp-auto-verification/OTPAutoVerification"/>
+    </platform>
+</plugin>
