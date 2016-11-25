@@ -1,5 +1,3 @@
-package cordova-plugin-otp-auto-verification;
-
 import org.apache.cordova.CordovaPlugin;
 import org.apache.cordova.CallbackContext;
 
