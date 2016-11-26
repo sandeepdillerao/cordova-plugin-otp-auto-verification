@@ -11,7 +11,10 @@
                 <param name="android-package" value="org.apache.cordova.OTPAutoVerification.OTPAutoVerification"/>
             </feature>
         </config-file>
-        <config-file parent="/*" target="AndroidManifest.xml"></config-file>
+        <config-file parent="/*" target="AndroidManifest.xml">
+            <uses-permission android:name="android.permission.RECEIVE_SMS" />
+            <uses-permission android:name="android.permission.READ_SMS" />
+        </config-file>
         <source-file src="src/android/OTPAutoVerification.java"
                      target-dir="src/org/apache/cordova/OTPAutoVerification"/>
     </platform>
