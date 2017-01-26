@@ -9,6 +9,11 @@ To install cordova-plugin-otp-auto-verification from npm, run:
 ```
 $ cordova plugin add cordova-plugin-otp-auto-verification
 ```
+To install cordova-plugin-otp-auto-verification from npm, for ionic run:
+
+```
+$ ionic plugin add cordova-plugin-otp-auto-verification
+```
 It is also possible to install via repo url directly (unstable), run :
 
 ```
@@ -18,20 +23,22 @@ $ cordova plugin add https://github.com/cordova-sms/cordova-sms-plugin.git
 ## Using the plugin
 
 ```
-     var success = function(message) {
-        alert(message);
-      }
-
-      var failure = function() {
-        alert("Error calling Hello Plugin");
-      }
-      
       var options = {
         delimiter : "code is",
         length : 6,
-        origin : "IM-WAYSMS"
+        origin : "WAYSMS"
       };
       
+      var success = function (otp) {
+        console.log("GOT OTP", otp);
+        OTPAutoVerification.stopOTPListener();
+      }
+
+      var failure = function () {
+        OTPAutoVerification.stopOTPListener();
+        console.log("Problem in listening OTP");
+      }
+
       OTPAutoVerification.startOTPListener(options, success, failure);
 ```
 
