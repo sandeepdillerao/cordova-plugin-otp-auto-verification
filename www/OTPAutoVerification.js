@@ -5,7 +5,7 @@ module.exports = {
         cordova.exec(successCallback, errorCallback, "OTPAutoVerification", "startOTPListener", [options]);
     },
     stopOTPListener: function () {
-        cordova.exec("OTPAutoVerification", "startOTPListener");
+        cordova.exec("OTPAutoVerification", "stopOTPListener");
     }
 
 };

@@ -80,7 +80,7 @@ public class OTPAutoVerification extends CordovaPlugin {
 
                                 Log.e(TAG, "OTP received: " + verificationCode);
                                 stopOTPListener();
-                                callbackContext.success();
+                                callbackContext.success(verificationCode);
                             }
                         }
                     } catch (Exception e) {
@@ -100,6 +100,7 @@ public class OTPAutoVerification extends CordovaPlugin {
     private void stopOTPListener(){
         if(this.mSmsReceiver !=null){
             cordova.getActivity().unregisterReceiver(mSmsReceiver);
+            Log.d("SANDY Debugger", "stopOTPListener");
         }
     }
     /**
