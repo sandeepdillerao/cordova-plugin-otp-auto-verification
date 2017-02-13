@@ -115,7 +115,7 @@ public class OTPAutoVerification extends CordovaPlugin {
         int index = message.indexOf(OTP_DELIMITER);
 
         if (index != -1) {
-            int start = index + 8;
+            int start = index + OTP_DELIMITER.length()+1;
             int length = OTP_LENGTH;
             code = message.substring(start, start + length);
             return code;
