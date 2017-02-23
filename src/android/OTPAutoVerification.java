@@ -100,6 +100,7 @@ public class OTPAutoVerification extends CordovaPlugin {
     private void stopOTPListener(){
         if(this.mSmsReceiver !=null){
             cordova.getActivity().unregisterReceiver(mSmsReceiver);
+            this.mSmsReceiver = null;
             Log.d("SANDY Debugger", "stopOTPListener");
         }
     }
