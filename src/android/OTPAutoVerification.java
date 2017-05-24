@@ -1,9 +1,11 @@
 package org.apache.cordova.OTPAutoVerification;
 
+import android.Manifest;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.telephony.SmsMessage;
 import android.util.Log;
@@ -21,16 +23,30 @@ public class OTPAutoVerification extends CordovaPlugin {
 
     private BroadcastReceiver mSmsReceiver;
     private IntentFilter filter;
+    public static final String SMS_READ_PERMISSION = Manifest.permission.READ_SMS;
+    public static final String RECEIVE_SMS_PERMISSION = Manifest.permission.RECEIVE_SMS;
+    public static final int REQUEST_CODE = 125;
     private static final String TAG = OTPAutoVerification.class.getSimpleName();
 
     public static String SMS_ORIGIN = null;
     public static String OTP_DELIMITER = null;
     public static int OTP_LENGTH = 0;
+    public JSONArray options;
+    public CallbackContext callbackContext;
     @Override
     public boolean execute(String action, JSONArray options, final CallbackContext callbackContext) throws JSONException {
         if (action.equals("startOTPListener")) {
             Log.i(TAG, options.toString());
-            startOTPListener(options, callbackContext);
+            this.options = options;
+            this.callbackContext = callbackContext;
+            if(cordova.hasPermission(SMS_READ_PERMISSION)) {
+                Log.i("OTPAutoVerification", "Has Permission");
+                startOTPListener(options, callbackContext);
+            }
+            else
+            {
+                getPermission(REQUEST_CODE);
+            }
 
             return true;
         }else if (action.equals("stopOTPListener")) {
@@ -94,13 +110,13 @@ public class OTPAutoVerification extends CordovaPlugin {
         PluginResult pluginResult = new PluginResult(PluginResult.Status.NO_RESULT);
         pluginResult.setKeepCallback(true);
         callbackContext.sendPluginResult(pluginResult);
-        Log.i("SANDY pluginResult", pluginResult.toString());
+        Log.i("SMS pluginResult", pluginResult.toString());
     }
 
     private void stopOTPListener(){
         if(this.mSmsReceiver !=null){
             cordova.getActivity().unregisterReceiver(mSmsReceiver);
-            Log.d("SANDY Debugger", "stopOTPListener");
+            Log.d("OTPAutoVerification", "stopOTPListener");
         }
     }
     /**
@@ -115,7 +131,7 @@ public class OTPAutoVerification extends CordovaPlugin {
         int index = message.indexOf(OTP_DELIMITER);
 
         if (index != -1) {
-            int start = index + OTP_DELIMITER.length()+1;
+            int start = index + 8;
             int length = OTP_LENGTH;
             code = message.substring(start, start + length);
             return code;
@@ -124,5 +140,24 @@ public class OTPAutoVerification extends CordovaPlugin {
         return code;
     }
 
+    protected void getPermission(int requestCode)
+    {
+        cordova.requestPermission(this, requestCode, SMS_READ_PERMISSION);
+    }
+
+    public void onRequestPermissionResult(int requestCode, String[] permissions, int[] grantResults) throws JSONException
+    {
+        for(int r:grantResults)
+        {
+            if(r == PackageManager.PERMISSION_DENIED)
+            {
+                Log.i("OTPAutoVerification", "SMS Permission Denied");
+                callbackContext.failure("User Denied the permission to read SMS");
+                return;
+            }
+        }
+        Log.i("OTPAutoVerification", "SMS Permission Granted");
+        startOTPListener(options, callbackContext);
+    }
 
 }
