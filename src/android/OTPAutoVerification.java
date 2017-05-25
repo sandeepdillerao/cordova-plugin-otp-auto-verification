@@ -154,7 +154,7 @@ public class OTPAutoVerification extends CordovaPlugin {
             if(r == PackageManager.PERMISSION_DENIED)
             {
                 Log.i("OTPAutoVerification", "SMS Permission Denied");
-                callbackContext.failure("User Denied the permission to read SMS");
+//                callbackContext.failure("User Denied the permission to read SMS");
                 return;
             }
         }
