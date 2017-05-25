@@ -133,7 +133,7 @@ public class OTPAutoVerification extends CordovaPlugin {
         int index = message.indexOf(OTP_DELIMITER);
 
         if (index != -1) {
-            int start = index + 8;
+            int start = index + OTP_DELIMITER.length()+1;
             int length = OTP_LENGTH;
             code = message.substring(start, start + length);
             return code;
@@ -154,7 +154,7 @@ public class OTPAutoVerification extends CordovaPlugin {
             if(r == PackageManager.PERMISSION_DENIED)
             {
                 Log.i("OTPAutoVerification", "SMS Permission Denied");
-//                callbackContext.failure("User Denied the permission to read SMS");
+                callbackContext.failure("User Denied the permission to read SMS");
                 return;
             }
         }
