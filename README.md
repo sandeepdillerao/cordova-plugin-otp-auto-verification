@@ -7,7 +7,7 @@ NOTE: This plugin is available only for android.
 To install cordova-plugin-otp-auto-verification from npm, run:
 
 ```
-$ cordova plugin add https://github.com/sandeepdillerao/cordova-plugin-otp-auto-verification
+$ cordova plugin add cordova-plugin-otp-auto-verification
 ```
 To install cordova-plugin-otp-auto-verification from npm, for ionic run:
 
@@ -38,7 +38,19 @@ $ ionic plugin add https://github.com/sandeepdillerao/cordova-plugin-otp-auto-ve
       OTPAutoVerification.startOTPListener(options, success, failure);
 ```
 
+##### delimiter :
+This is matching text just before the OTP string.
+Suppose your OTP sms is like "One time password for App is 1234"
+then your delimiter will be "App is".
 
+##### length : 
+This is length of you OTP string. when otp sms received code will extract this length digits after `delimeter` string.
+
+##### origin :
+This is 6 digit senderID which your getting in SMS.
+eg. if your getting SMS from senderID TD-ABCDEF then origin = "ABCDEF"
+
+##### NOTE: Sender ID should be fixed one to work Auto OTP verification. 
 
 ## License
 
