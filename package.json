@@ -1,6 +1,6 @@
 {
   "name": "cordova-plugin-otp-auto-verification",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "A plugin for Autoverification of OTP",
   "cordova": {
     "id": "OTPAutoVerification",
