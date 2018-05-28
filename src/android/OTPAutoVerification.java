@@ -21,9 +21,7 @@ import org.json.JSONException;
  */
 public class OTPAutoVerification extends CordovaPlugin {
 
-    private BroadcastReceiver mSmsReceiver;
     private IntentFilter filter;
-    public static final String SMS_READ_PERMISSION = Manifest.permission.READ_SMS;
     public static final String RECEIVE_SMS_PERMISSION = Manifest.permission.RECEIVE_SMS;
     public static final int REQUEST_CODE = 125;
     private static final String TAG = OTPAutoVerification.class.getSimpleName();
@@ -39,7 +37,7 @@ public class OTPAutoVerification extends CordovaPlugin {
             Log.i(TAG, options.toString());
             this.options = options;
             this.callbackContext = callbackContext;
-            if(cordova.hasPermission(SMS_READ_PERMISSION)) {
+            if(cordova.hasPermission(RECEIVE_SMS_PERMISSION)) {
                 Log.i("OTPAutoVerification", "Has Permission");
                 startOTPListener(options, callbackContext);
             }
@@ -62,51 +60,31 @@ public class OTPAutoVerification extends CordovaPlugin {
             SMS_ORIGIN = options.getJSONObject(0).getString("origin");
             OTP_DELIMITER = options.getJSONObject(0).getString("delimiter");
             OTP_LENGTH = options.getJSONObject(0).getInt("length");
+
+            SMSListener.bindListener(new Common.OTPListener() {
+                @Override
+                public void onOTPReceived(String message, String sender) {
+                    Log.e(TAG, "Received SMS: " + message + ", Sender: " + sender);
+
+                    // if the SMS is not from our gateway, ignore the message
+                    if (!sender.toLowerCase().contains(SMS_ORIGIN.toLowerCase())) {
+                        return;
+                    }
+
+                    // verification code from sms
+                    String verificationCode = getVerificationCode(message);
+
+                    Log.e(TAG, "OTP received: " + verificationCode);
+                    stopOTPListener();
+                    callbackContext.success(verificationCode);
+                }
+            });
         } catch (JSONException e) {
             e.printStackTrace();
         }
-
-
         filter = new IntentFilter();
         filter.addAction("android.provider.Telephony.SMS_RECEIVED");
-
-        if (this.mSmsReceiver == null) {
-            this.mSmsReceiver = new BroadcastReceiver() {
-                @Override
-                public void onReceive(Context context, Intent intent) {
-
-                    final Bundle bundle = intent.getExtras();
-                    try {
-                        if (bundle != null) {
-                            Object[] pdusObj = (Object[]) bundle.get("pdus");
-                            for (Object aPdusObj : pdusObj) {
-                                SmsMessage currentMessage = SmsMessage.createFromPdu((byte[]) aPdusObj);
-                                String senderAddress = currentMessage.getDisplayOriginatingAddress();
-                                String message = currentMessage.getDisplayMessageBody();
-
-                                Log.e(TAG, "Received SMS: " + message + ", Sender: " + senderAddress);
-
-                                // if the SMS is not from our gateway, ignore the message
-                                if (!senderAddress.toLowerCase().contains(SMS_ORIGIN.toLowerCase())) {
-                                    return;
-                                }
-
-                                // verification code from sms
-                                String verificationCode = getVerificationCode(message);
-
-                                Log.e(TAG, "OTP received: " + verificationCode);
-                                stopOTPListener();
-                                callbackContext.success(verificationCode);
-                            }
-                        }
-                    } catch (Exception e) {
-                        Log.e(TAG, "Exception: " + e.getMessage());
-                    }
-                }
-            };
-            cordova.getActivity().registerReceiver(this.mSmsReceiver, filter);
-        }
-
+        cordova.getActivity().registerReceiver(new SMSListener(), filter);
         PluginResult pluginResult = new PluginResult(PluginResult.Status.NO_RESULT);
         pluginResult.setKeepCallback(true);
         callbackContext.sendPluginResult(pluginResult);
@@ -114,13 +92,11 @@ public class OTPAutoVerification extends CordovaPlugin {
     }
 
     private void stopOTPListener(){
-        if(this.mSmsReceiver !=null){
-            cordova.getActivity().unregisterReceiver(mSmsReceiver);
-            Log.d("OTPAutoVerification", "stopOTPListener");
-            this.mSmsReceiver = null;
-            Log.d("SANDY Debugger", "stopOTPListener");
-        }
+        Log.d("OTPAutoVerification", "stopOTPListener");
+        SMSListener.unbindListener();
+        Log.d("SANDY Debugger", "stopOTPListener");
     }
+
     /**
      * Getting the OTP from sms message body
      * ':' is the separator of OTP from the message
@@ -144,7 +120,7 @@ public class OTPAutoVerification extends CordovaPlugin {
 
     protected void getPermission(int requestCode)
     {
-        cordova.requestPermission(this, requestCode, SMS_READ_PERMISSION);
+        cordova.requestPermission(this, requestCode, RECEIVE_SMS_PERMISSION);
     }
 
     public void onRequestPermissionResult(int requestCode, String[] permissions, int[] grantResults) throws JSONException
@@ -162,4 +138,55 @@ public class OTPAutoVerification extends CordovaPlugin {
         startOTPListener(options, callbackContext);
     }
 
+    /*
+    * Interface for OTP sms Listener
+    * */
+    public interface Common {
+        interface OTPListener {
+            void onOTPReceived(String otp, String sender);
+        }
+    }
+
+    /*
+    * broadcast listener to listen for MESSAGE
+    * @return originalMessage and Sender
+    * onOTPReceived(smsMessage.getDisplayMessageBody(), senderAddress);
+    * */
+    public static class SMSListener extends BroadcastReceiver {
+
+        private static OTPAutoVerification.Common.OTPListener mListener; // this listener will do the magic of throwing the extracted OTP to all the bound views.
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+
+            // this function is trigged when each time a new SMS is received on device.
+
+            Bundle data = intent.getExtras();
+
+            Object[] pdus = new Object[0];
+            if (data != null) {
+                pdus = (Object[]) data.get("pdus"); // the pdus key will contain the newly received SMS
+            }
+
+            if (pdus != null) {
+                for (Object pdu : pdus) { // loop through and pick up the SMS of interest
+                    SmsMessage smsMessage = SmsMessage.createFromPdu((byte[]) pdu);
+
+                    // your custom logic to filter and extract the OTP from relevant SMS - with regex or any other way.
+                    String senderAddress = smsMessage.getDisplayOriginatingAddress();
+                    if (mListener!=null)
+                        mListener.onOTPReceived(smsMessage.getDisplayMessageBody(), senderAddress);
+                    break;
+                }
+            }
+        }
+
+        public static void bindListener(OTPAutoVerification.Common.OTPListener listener) {
+            mListener = listener;
+        }
+
+        public static void unbindListener() {
+            mListener = null;
+        }
+    }
 }
