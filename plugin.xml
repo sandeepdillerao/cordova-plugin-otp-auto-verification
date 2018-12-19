@@ -16,5 +16,7 @@
         </config-file>
         <source-file src="src/android/OTPAutoVerification.java"
                      target-dir="src/org/apache/cordova/OTPAutoVerification"/>
+            <framework src="com.google.android.gms:play-services-identity:16.0.0" />
+        <framework src="com.google.android.gms:play-services-auth:16.0.1" />
     </platform>
 </plugin>
