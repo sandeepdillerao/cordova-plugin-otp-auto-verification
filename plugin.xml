@@ -12,7 +12,6 @@
             </feature>
         </config-file>
         <config-file parent="/*" target="AndroidManifest.xml">
-            <uses-permission android:name="android.permission.RECEIVE_SMS" />
         </config-file>
         <config-file target="AndroidManifest.xml" parent="/manifest/application">
             <receiver android:name="org.apache.cordova.OTPAutoVerification.OTPAutoVerification$SMSListener" android:exported="true">
