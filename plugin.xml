@@ -6,7 +6,6 @@
         <clobbers target="OTPAutoVerification"/>
     </js-module>
     <platform name="android">
-        <resource-file src="../../google-services.json" target="google-services.json" />
         <config-file parent="/*" target="res/xml/config.xml">
             <feature name="OTPAutoVerification">
                 <param name="android-package" value="org.apache.cordova.OTPAutoVerification.OTPAutoVerification"/>
