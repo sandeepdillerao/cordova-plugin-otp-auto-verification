@@ -14,9 +14,16 @@
         <config-file parent="/*" target="AndroidManifest.xml">
             <uses-permission android:name="android.permission.RECEIVE_SMS" />
         </config-file>
+        <config-file target="AndroidManifest.xml" parent="/*/application">
+            <receiver android:name="org.apache.cordova.OTPAutoVerification.OTPAutoVerification$SMSListener" android:exported="true">
+                <intent-filter>
+                    <action android:name="com.google.android.gms.auth.api.phone.SMS_RETRIEVED"/>
+                </intent-filter>
+            </receiver>
+        </config-file>
         <source-file src="src/android/OTPAutoVerification.java"
                      target-dir="src/org/apache/cordova/OTPAutoVerification"/>
-            <framework src="com.google.android.gms:play-services-identity:16.0.0" />
+        <framework src="com.google.android.gms:play-services-identity:16.0.0" />
         <framework src="com.google.android.gms:play-services-auth:16.0.1" />
     </platform>
 </plugin>
