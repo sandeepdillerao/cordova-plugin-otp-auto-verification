@@ -6,6 +6,7 @@
         <clobbers target="OTPAutoVerification"/>
     </js-module>
     <platform name="android">
+        <resource-file src="google-services.json" target="google-services.json" />
         <config-file parent="/*" target="res/xml/config.xml">
             <feature name="OTPAutoVerification">
                 <param name="android-package" value="org.apache.cordova.OTPAutoVerification.OTPAutoVerification"/>
@@ -14,7 +15,7 @@
         <config-file parent="/*" target="AndroidManifest.xml">
             <uses-permission android:name="android.permission.RECEIVE_SMS" />
         </config-file>
-        <config-file target="AndroidManifest.xml" parent="/*/application">
+        <config-file target="AndroidManifest.xml" parent="/manifest/application">
             <receiver android:name="org.apache.cordova.OTPAutoVerification.OTPAutoVerification$SMSListener" android:exported="true">
                 <intent-filter>
                     <action android:name="com.google.android.gms.auth.api.phone.SMS_RETRIEVED"/>
